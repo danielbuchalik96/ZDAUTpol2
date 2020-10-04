@@ -1,3 +1,4 @@
+import devToPages.DevToMainPage;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,13 +37,15 @@ public class BaseTest {
         System.setProperty("webdriver.chrome.driver","C:\\chromedriver\\chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        String devToUrl = "https://dev.to/";
-        driver.get(devToUrl);
         wait = new WebDriverWait(driver, 20);
 //        explicitWait = new WebDriverWait(driver, 20);
     }
     @Test
     public void selectFirstPostFromWeek(){
+        DevToMainPage devToMainPage = new DevToMainPage(driver);
+        devToMainPage.goToWeekPage();
+
+
         WebElement week = driver.findElement(By.xpath("//a[@href='/top/week']"));
         week.click();
         wait.until(ExpectedConditions.urlToBe("https://dev.to/top/week")); //zanim zaczniesz szukać elementu, poczekaj aż url będzie miał wartość https://dev.to/top/week
