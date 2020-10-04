@@ -26,6 +26,7 @@ public class BaseTest {
     WebDriver driver;
     WebDriverWait wait;
     //    WebDriverWait explicitWait;
+
     public void highlightElement(WebDriver driver, WebElement element){
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].setAttribute('style', 'background: green; border: 3px solid blue;');", element);
@@ -41,7 +42,7 @@ public class BaseTest {
 //        explicitWait = new WebDriverWait(driver, 20);
     }
     @Test
-    public void firstTest(){
+    public void selectFirstPostFromWeek(){
         WebElement week = driver.findElement(By.xpath("//a[@href='/top/week']"));
         week.click();
         wait.until(ExpectedConditions.urlToBe("https://dev.to/top/week")); //zanim zaczniesz szukać elementu, poczekaj aż url będzie miał wartość https://dev.to/top/week
@@ -77,8 +78,34 @@ public class BaseTest {
         highlightElement(driver, java);
         java.click();
     }
+    @Test
+    public void PodcastTest(){
+       WebElement podcast = driver.findElement(By.xpath("//a[@href='/pod']"));
+       podcast.click();
+       wait.until(ExpectedConditions.urlToBe("https://dev.to/pod"));
+       wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.tagName("h3")));
+       List<WebElement> podcasts = driver.findElements(By.tagName("h3"));
+       podcasts.get(3).click();
+       wait.until(ExpectedConditions.urlContains("stackpodcast"));
+       WebElement playArea = driver.findElement(By.className("record-wrapper"));
+       playArea.click();
+       WebElement initializing = driver.findElement(By.className("status-message"));
+
+               String playArenaClassAttribute = playArea.getAttribute("class");
+        boolean isPlaying = playArenaClassAttribute.contains("playing");
+
+
+        assertTrue("Podcast isn't playing", isPlaying);
+        }
+
+        private void waitForElements(String targetUrl, String cssSelector) {
+            wait.until(ExpectedConditions.urlContains(targetUrl));
+            wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(cssSelector)));
+        }
+
     @After
     public void cleanUp() {
 //        driver.quit();
     }
+
 }
